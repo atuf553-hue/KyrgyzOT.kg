@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КыргызОт — Твёрдое топливо с доставкой</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=JetBrains+Mono:wght@400;600&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     ONBOARDING
+══════════════════════════════════════ -->
+<div id="onboarding">
+  <div class="onb-bg"></div>
+  <div class="fire-anim">🔥</div>
+  <div class="onb-title">Кыргыз<span>От</span></div>
+  <p class="onb-sub">Твёрдое топливо с доставкой по всему Кыргызстану</p>
+  <div class="onb-card">
+    <div class="onb-step active" id="onbStep1">
+      <div class="onb-label">Шаг 1 из 2</div>
+      <div class="onb-q">🗺️ Выберите вашу область</div>
+      <div class="region-grid" id="regionGrid"></div>
+      <button class="onb-btn" id="btnToStep2" disabled onclick="goStep2()">Далее →</button>
+    </div>
+    <div class="onb-step" id="onbStep2">
+      <div class="onb-label">Шаг 2 из 2</div>
+      <div class="onb-q">🏘️ Выберите населённый пункт</div>
+      <div class="sel-wrap">
+        <select class="village-sel" id="villageSelect" onchange="onVillage()">
+          <option value="">— Выберите —</option>
+        </select>
+      </div>
+      <button class="onb-btn" id="btnEnter" disabled onclick="enterSite()">Войти на сайт 🔥</button>
+    </div>
+    <div class="prog-dots"><div class="dot active" id="d1"></div><div class="dot" id="d2"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CLIENT SITE
+══════════════════════════════════════ -->
+<div id="clientSite">
+  <header class="site-header">
+    <div class="logo" onclick="showClientPage('home')">Кыргыз<span>От</span></div>
+    <nav class="site-nav">
+      <button class="nav-link active" onclick="showClientPage('home')">🏠 Главная</button>
+      <button class="nav-link" onclick="showClientPage('catalog')">📦 Каталог</button>
+      <button class="nav-link" onclick="showClientPage('about')">ℹ️ О нас</button>
+      <button class="nav-link" onclick="showClientPage('contacts')">📞 Контакты</button>
+    </nav>
+    <div class="header-right">
+      <div class="loc-pill" onclick="resetLocation()" title="Сменить регион">
+        <span class="loc-dot"></span>
+        <span id="headerLoc">—</span> ✏️
+      </div>
+      <button class="cart-fab" onclick="showClientPage('order')">
+        🛒 Корзина <span class="cart-cnt" id="cartCnt">0</span>
+      </button>
+      <button class="abtn" onclick="openAdminLogin()" style="font-size:11px">⚙️ Админ</button>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <div class="client-page active" id="pg-home">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Тепло в каждый<br><span>дом Кыргызстана</span></h1>
+        <p>Уголь, дрова и брикеты с быстрой доставкой. Надёжные поставки, честные цены, точный вес.</p>
+        <div class="hero-badges">
+          <div class="badge hot">🏆 Лучший уголь Кузбасса</div>
+          <div class="badge">🚚 Доставка за 1–3 дня</div>
+          <div class="badge">⚖️ Точный вес</div>
+          <div class="badge">🛡️ Гарантия качества</div>
+        </div>
+        <div class="hero-cta">
+          <button class="btn-primary" onclick="showClientPage('catalog')">Выбрать топливо</button>
+          <button class="btn-outline" onclick="showClientPage('about')">Как это работает</button>
+        </div>
+      </div>
+      <div class="hero-visual">🪵</div>
+    </div>
+    <div class="divider"></div>
+    <div class="features">
+      <div class="features-grid">
+        <div class="feat-card"><div class="feat-icon">🚚</div><div class="feat-title">Быстрая доставка</div><div class="feat-desc">Доставляем по всем 7 областям Кыргызстана за 1–3 рабочих дня</div></div>
+        <div class="feat-card"><div class="feat-icon">⚖️</div><div class="feat-title">Точный вес</div><div class="feat-desc">Все заказы взвешиваются на сертифицированных весах</div></div>
+        <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">Гарантия качества</div><div class="feat-desc">Работаем только с проверенными поставщиками из России и Казахстана</div></div>
+        <div class="feat-card"><div class="feat-icon">📞</div><div class="feat-title">Поддержка 24/7</div><div class="feat-desc">Менеджеры всегда на связи для консультации и помощи с заказом</div></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-wrap">
+      <div class="sec-head">
+        <div class="sec-title">🔥 Популярные товары</div>
+        <button class="btn-outline" style="padding:8px 18px;font-size:12px" onclick="showClientPage('catalog')">Все товары →</button>
+      </div>
+      <div class="products-grid" id="homeProductsGrid"></div>
+    </div>
+  </div>
+
+  <!-- CATALOG -->
+  <div class="client-page" id="pg-catalog">
+    <div class="section-wrap">
+      <div class="sec-head"><div class="sec-title">📦 Каталог товаров</div><div id="catDelivery" style="font-size:13px;color:var(--smoke)"></div></div>
+      <div class="filters-bar" style="margin-bottom:24px">
+        <div class="srch-wrap"><input class="srch-inp" id="catSearch" placeholder="Поиск товаров..." oninput="renderCatalog()"></div>
+        <select class="f-sel" id="catCatFilter" onchange="renderCatalog()">
+          <option value="">Все категории</option>
+          <option value="coal">🪨 Уголь</option>
+          <option value="wood">🪵 Дрова</option>
+          <option value="briket">🟫 Брикеты</option>
+        </select>
+      </div>
+      <div class="products-grid" id="catalogGrid"></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="client-page" id="pg-about">
+    <div class="section-wrap">
+      <div class="sec-head"><div class="sec-title">ℹ️ О компании КыргызОт</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px">
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;padding:28px">
+          <div style="font-size:36px;margin-bottom:12px">🏢</div>
+          <div style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700;margin-bottom:12px">Кто мы?</div>
+          <p style="color:var(--smoke);font-size:14px;line-height:1.7">КыргызОт — ведущий поставщик твёрдого топлива в Кыргызстане. Работаем с 2015 года, обеспечиваем теплом тысячи домов по всей стране. Наша миссия — доступное и качественное топливо для каждой семьи.</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;padding:28px">
+          <div style="font-size:36px;margin-bottom:12px">📊</div>
+          <div style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700;margin-bottom:12px">Наши цифры</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="text-align:center;background:rgba(230,57,70,.08);border-radius:12px;padding:16px"><div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:var(--ember)">8+</div><div style="font-size:12px;color:var(--smoke)">лет на рынке</div></div>
+            <div style="text-align:center;background:rgba(244,162,97,.08);border-radius:12px;padding:16px"><div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:var(--gold)">5000+</div><div style="font-size:12px;color:var(--smoke)">клиентов</div></div>
+            <div style="text-align:center;background:rgba(34,197,94,.08);border-radius:12px;padding:16px"><div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:var(--green)">7</div><div style="font-size:12px;color:var(--smoke)">областей</div></div>
+            <div style="text-align:center;background:rgba(59,130,246,.08);border-radius:12px;padding:16px"><div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:var(--blue)">24/7</div><div style="font-size:12px;color:var(--smoke)">поддержка</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sec-head"><div class="sec-title">📋 Как сделать заказ</div></div>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">01</div><div class="step-icon">🗺️</div><div class="step-title">Выберите регион</div><div class="step-desc">При входе укажите вашу область и населённый пункт для корректного расчёта доставки</div></div>
+        <div class="step-card"><div class="step-num">02</div><div class="step-icon">🛒</div><div class="step-title">Добавьте товары</div><div class="step-desc">Выберите нужный вид топлива и количество из нашего каталога</div></div>
+        <div class="step-card"><div class="step-num">03</div><div class="step-icon">📋</div><div class="step-title">Оформите заказ</div><div class="step-desc">Заполните форму доставки и выберите удобный способ оплаты</div></div>
+        <div class="step-card"><div class="step-num">04</div><div class="step-icon">🚚</div><div class="step-title">Получите топливо</div><div class="step-desc">Доставим в течение 1–3 дней. Менеджер свяжется для подтверждения</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACTS -->
+  <div class="client-page" id="pg-contacts">
+    <div class="section-wrap">
+      <div class="sec-head"><div class="sec-title">📞 Контакты</div></div>
+      <div class="contacts-grid">
+        <div>
+          <div class="contact-card" style="margin-bottom:20px">
+            <div class="contact-title">📍 Наши контакты</div>
+            <div class="contact-row"><div class="contact-icon">📞</div><div><div class="contact-label">Телефон</div><div class="contact-val">+996 705 200 722</div></div></div>
+            <div class="contact-row"><div class="contact-icon">📱</div><div><div class="contact-label">WhatsApp / Telegram</div><div class="contact-val">+996 705 200 722</div></div></div>
+            <div class="contact-row"><div class="contact-icon">📧</div><div><div class="contact-label">Email</div><div class="contact-val">info@kyrgyzot.kg</div></div></div>
+            <div class="contact-row"><div class="contact-icon">🏢</div><div><div class="contact-label">Адрес</div><div class="contact-val">г. Нарын Улица Ленина 69</div></div></div>
+            <div class="contact-row"><div class="contact-icon">⏰</div><div><div class="contact-label">Режим работы</div><div class="contact-val">Пн–Вс 8:00–22:00</div></div></div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-title">💬 Написать нам</div>
+            <div class="m-fg"><div class="m-lbl">Имя</div><input class="m-inp" placeholder="Ваше имя" id="cont_name"></div>
+            <div class="m-fg"><div class="m-lbl">Телефон</div><input class="m-inp" placeholder="+996 700 000 000" id="cont_phone"></div>
+            <div class="m-fg"><div class="m-lbl">Сообщение</div><textarea class="m-inp" rows="3" placeholder="Ваш вопрос..." id="cont_msg"></textarea></div>
+            <button class="btn-primary" style="width:100%;margin-top:4px" onclick="sendContact()">Отправить сообщение</button>
+          </div>
+        </div>
+        <div>
+          <div class="contact-card">
+            <div class="contact-title">🗺️ Области доставки</div>
+            <div class="regions-list">
+              <div class="region-tag">🏙️ Чуйская область</div>
+              <div class="region-tag">🌾 Ошская область</div>
+              <div class="region-tag">🌿 Джалал-Абадская</div>
+              <div class="region-tag">⛰️ Нарынская область</div>
+              <div class="region-tag">🌊 Иссык-Кульская</div>
+              <div class="region-tag">🌄 Таласская область</div>
+              <div class="region-tag">🏜️ Баткенская область</div>
+            </div>
+            <div style="margin-top:20px;padding:16px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:12px;font-size:13px;color:var(--smoke);line-height:1.6">
+              ✅ <strong style="color:#fff">Бесплатная доставка</strong> при заказе от 3 тонн угля или 10 м³ дров в пределах областного центра.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER / CART -->
+  <div class="client-page" id="pg-order">
+    <div class="section-wrap">
+      <div class="sec-head"><div class="sec-title">🛒 Оформление заказа</div></div>
+      <div class="order-layout">
+        <div class="form-card">
+          <div class="form-title">📋 Данные доставки</div>
+          <div class="form-row">
+            <div class="form-group"><label class="f-label">ИМЯ</label><input class="f-inp" id="o_fname" placeholder="Айбек"></div>
+            <div class="form-group"><label class="f-label">ФАМИЛИЯ</label><input class="f-inp" id="o_lname" placeholder="Жумабеков"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="f-label">ТЕЛЕФОН</label><input class="f-inp" id="o_phone" type="tel" placeholder="+996 700 000 000"></div>
+            <div class="form-group"><label class="f-label">ОПЛАТА</label>
+              <select class="f-inp" id="o_pay">
+                <option value="">Выберите...</option>
+                <option>Наличными при доставке</option>
+                <option>Мбанк / ОРА</option>
+                <option>Элкарт</option>
+                <option>Банковский перевод</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full"><label class="f-label">АДРЕС ДОСТАВКИ</label><input class="f-inp" id="o_addr" placeholder="Улица, дом, ориентир"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full"><label class="f-label">КОММЕНТАРИЙ</label><textarea class="f-inp" id="o_comment" rows="3" placeholder="Удобное время, въезд во двор..."></textarea></div>
+          </div>
+          <button class="submit-btn" onclick="submitOrder()">Оформить заказ 🔥</button>
+        </div>
+        <div class="cart-card">
+          <div class="form-title">🛒 Ваша корзина</div>
+          <div id="cartItemsList"><div class="empty-cart-msg">Корзина пуста<br>Добавьте товары в каталоге 👆</div></div>
+          <div id="cartTotalBlock" style="display:none">
+            <div class="cart-total-row">
+              <div class="cart-total-lbl">Итого:</div>
+              <div class="cart-total-val" id="cartTotalVal">0 сом</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="siteFooter">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Кыргыз<span>От</span></div>
+        <div class="footer-desc">Надёжный поставщик твёрдого топлива для домов и предприятий Кыргызстана. Работаем с 2015 года.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Навигация</div>
+        <span class="footer-link" onclick="showClientPage('home')">Главная</span>
+        <span class="footer-link" onclick="showClientPage('catalog')">Каталог</span>
+        <span class="footer-link" onclick="showClientPage('about')">О нас</span>
+        <span class="footer-link" onclick="showClientPage('contacts')">Контакты</span>
+      </div>
+      <div>
+        <div class="footer-col-title">Товары</div>
+        <span class="footer-link">Уголь </span>
+        <span class="footer-link">Уголь </span>
+        <span class="footer-link">Антрацит</span>
+        <span class="footer-link">Дрова </span>
+        <span class="footer-link">Брикеты</span>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакты</div>
+        <span class="footer-link">📞 +996 705 200 722</span>
+        <span class="footer-link">📱 +996 705 200 722</span>
+        <span class="footer-link">📧 info@kyrgyzot.kg</span>
+        <span class="footer-link">⏰ 8:00–22:00 ежедневно</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 КыргызОт. Все права защищены.</span>
+      <span>Доставка по всему Кыргызстану 🇰🇬</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN SITE
+══════════════════════════════════════ -->
+<div id="adminSite">
+  <div class="adm-sidebar">
+    <div class="adm-logo">
+      <div class="adm-logo-text">Кыргыз<span>От</span></div>
+      <div class="adm-logo-sub">Администратор</div>
+    </div>
+    <div class="adm-nav">
+      <div class="adm-nav-lbl">Основное</div>
+      <div class="adm-nav-item active" onclick="showAdminPage('dashboard')" id="anv-dashboard"><span class="adm-ni">📊</span> Дашборд</div>
+      <div class="adm-nav-item" onclick="showAdminPage('orders')" id="anv-orders"><span class="adm-ni">📋</span> Заказы <span class="adm-badge" id="newOrdersBadge">0</span></div>
+      <div class="adm-nav-item" onclick="showAdminPage('products')" id="anv-products"><span class="adm-ni">📦</span> Товары</div>
+      <div class="adm-nav-item" onclick="showAdminPage('clients')" id="anv-clients"><span class="adm-ni">👥</span> Клиенты</div>
+      <div class="adm-nav-lbl">Аналитика</div>
+      <div class="adm-nav-item" onclick="showAdminPage('analytics')" id="anv-analytics"><span class="adm-ni">📈</span> Аналитика</div>
+      <div class="adm-nav-lbl">Система</div>
+      <div class="adm-nav-item" onclick="showAdminPage('settings')" id="anv-settings"><span class="adm-ni">⚙️</span> Настройки</div>
+    </div>
+    <button class="adm-back" onclick="showClient()">← Вернуться на сайт</button>
+    <button onclick="doLogout()" style="width:calc(100% - 24px);margin:8px 12px 0;background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:9px;padding:9px;color:#e63946;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">🚪 Выйти</button>
+    <div class="adm-footer">v1.0 · КыргызОт Admin</div>
+  </div>
+
+  <div class="adm-main">
+    <!-- DASHBOARD -->
+    <div class="page active" id="adm-dashboard">
+      <div class="adm-topbar"><div class="adm-topbar-title">📊 Дашборд</div><div class="adm-topbar-right"><span id="admDate" style="font-size:12px;color:var(--muted)"></span></div></div>
+      <div class="adm-content">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Всего заказов</div><div class="stat-ico" style="background:rgba(59,130,246,.12)">📋</div></div><div class="stat-val" id="ds-total">—</div><div class="stat-sub" id="ds-total-s">загрузка...</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Новых заказов</div><div class="stat-ico" style="background:rgba(230,57,70,.12)">🔔</div></div><div class="stat-val" id="ds-new" style="color:var(--ember)">—</div><div class="stat-sub">ожидают обработки</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Выручка (сом)</div><div class="stat-ico" style="background:rgba(244,162,97,.12)">💰</div></div><div class="stat-val" id="ds-rev" style="color:var(--gold)">—</div><div class="stat-sub">выполненные заказы</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Клиентов</div><div class="stat-ico" style="background:rgba(34,197,94,.12)">👥</div></div><div class="stat-val" id="ds-clients" style="color:var(--green)">—</div><div class="stat-sub">уникальных</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="tbl-wrap" style="border-radius:16px">
+            <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700">🕐 Последние заказы</div>
+            <table><thead><tr><th>ID</th><th>Клиент</th><th>Сумма</th><th>Статус</th></tr></thead>
+            <tbody id="recentOrdersTbl"></tbody></table>
+          </div>
+          <div class="tbl-wrap" style="border-radius:16px">
+            <div style="padding:18px 20px 14px;border-bottom:1px solid var(--border);font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700">⚠️ Мало на складе</div>
+            <table><thead><tr><th>Товар</th><th>Остаток</th><th>Статус</th></tr></thead>
+            <tbody id="lowStockTbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="page" id="adm-orders">
+      <div class="adm-topbar"><div class="adm-topbar-title">📋 Заказы</div><div class="adm-topbar-right"><button class="abtn" onclick="exportOrdersCSV()">⬇️ CSV</button><button class="abtn-primary" onclick="openNewOrderModal()">+ Новый заказ</button></div></div>
+      <div class="adm-content">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Всего</div><div class="stat-ico" style="background:rgba(255,255,255,.06)">📋</div></div><div class="stat-val" id="os-total">—</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Новых</div><div class="stat-ico" style="background:rgba(59,130,246,.1)">🔵</div></div><div class="stat-val" id="os-new" style="color:var(--blue)">—</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">В доставке</div><div class="stat-ico" style="background:rgba(6,182,212,.1)">🚚</div></div><div class="stat-val" id="os-del" style="color:var(--cyan)">—</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Выполнено</div><div class="stat-ico" style="background:rgba(34,197,94,.1)">✅</div></div><div class="stat-val" id="os-done" style="color:var(--green)">—</div></div>
+        </div>
+        <div class="filters-bar">
+          <div class="srch-wrap"><input class="srch-inp" id="ordSearch" placeholder="Поиск по имени, ID, телефону..." oninput="renderOrders()"></div>
+          <select class="f-sel" id="ordStatus" onchange="renderOrders()"><option value="">Все статусы</option><option value="new">Новый</option><option value="confirm">Подтверждён</option><option value="delivery">Доставляется</option><option value="done">Выполнен</option><option value="cancel">Отменён</option></select>
+          <select class="f-sel" id="ordRegion" onchange="renderOrders()"><option value="">Все области</option><option>Чуйская</option><option>Ошская</option><option>Джалал-Абадская</option><option>Нарынская</option><option>Иссык-Кульская</option><option>Таласская</option><option>Баткенская</option></select>
+          <div class="f-cnt" id="ordCount">—</div>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>ID</th><th>КЛИЕНТ</th><th>РЕГИОН</th><th>ТОВАРЫ</th><th>СУММА</th><th>СТАТУС</th><th>ДАТА</th><th>ДЕЙСТВИЯ</th></tr></thead>
+          <tbody id="ordersTbody"></tbody></table>
+          <div id="ordEmpty" style="display:none;text-align:center;padding:50px;color:var(--muted)">🔍 Заказы не найдены</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="page" id="adm-products">
+      <div class="adm-topbar"><div class="adm-topbar-title">📦 Товары</div><div class="adm-topbar-right"><button class="abtn" onclick="exportProductsCSV()">⬇️ CSV</button><button class="abtn-primary" onclick="openProdModal()">+ Добавить</button></div></div>
+      <div class="adm-content">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Всего товаров</div><div class="stat-ico" style="background:rgba(255,255,255,.06)">📦</div></div><div class="stat-val" id="ps-total">—</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Активных</div><div class="stat-ico" style="background:rgba(34,197,94,.1)">✅</div></div><div class="stat-val" id="ps-active" style="color:var(--green)">—</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Мало на складе</div><div class="stat-ico" style="background:rgba(234,179,8,.1)">⚠️</div></div><div class="stat-val" id="ps-low" style="color:var(--yellow)">—</div></div>
+          <div class="stat-card"><div class="stat-top"><div class="stat-lbl">Ср. цена</div><div class="stat-ico" style="background:rgba(244,162,97,.1)">💰</div></div><div class="stat-val" id="ps-avg" style="color:var(--gold)">—</div></div>
+        </div>
+        <div class="filters-bar">
+          <div class="srch-wrap"><input class="srch-inp" id="prodSearch" placeholder="Поиск товаров..." oninput="renderProducts()"></div>
+          <select class="f-sel" id="prodCat" onchange="renderProducts()"><option value="">Все</option><option value="coal">Уголь</option><option value="wood">Дрова</option><option value="briket">Брикеты</option></select>
+          <select class="f-sel" id="prodStock" onchange="renderProducts()"><option value="">Все остатки</option><option value="ok">В наличии</option><option value="low">Мало</option><option value="out">Нет</option></select>
+        </div>
+        <div class="adm-prod-grid" id="prodGrid"></div>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="page" id="adm-clients">
+      <div class="adm-topbar"><div class="adm-topbar-title">👥 Клиенты</div><div class="adm-topbar-right"><button class="abtn" onclick="exportClientsCSV()">⬇️ CSV</button></div></div>
+      <div class="adm-content">
+        <div class="filters-bar"><div class="srch-wrap"><input class="srch-inp" id="cliSearch" placeholder="Поиск клиента..." oninput="renderClients()"></div><div class="f-cnt" id="cliCount">—</div></div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>#</th><th>КЛИЕНТ</th><th>ТЕЛЕФОН</th><th>РЕГИОН</th><th>ЗАКАЗОВ</th><th>СУММА</th><th>ПОСЛЕДНИЙ</th></tr></thead>
+          <tbody id="clientsTbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="adm-analytics">
+      <div class="adm-topbar"><div class="adm-topbar-title">📈 Аналитика</div></div>
+      <div class="adm-content">
+        <div class="analytics-grid">
+          <div class="chart-card"><div class="chart-title">📅 Заказы по месяцам</div><div class="bar-chart" id="monthChart"></div></div>
+          <div class="chart-card"><div class="chart-title">🥧 Продажи по категориям</div><div class="donut-wrap"><svg class="donut" viewBox="0 0 36 36" id="donutSvg"></svg><div class="donut-legend" id="donutLegend"></div></div></div>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-card"><div class="chart-title">🗺️ Заказы по областям</div><div class="region-stats" id="regionStats"></div></div>
+          <div class="chart-card"><div class="chart-title">🏆 Топ товаров</div><div id="topProducts"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="adm-settings">
+      <div class="adm-topbar"><div class="adm-topbar-title">⚙️ Настройки</div></div>
+      <div class="adm-content">
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="settings-title">🏢 Данные компании</div>
+            <div class="m-fg"><div class="m-lbl">Название</div><input class="m-inp" value="КыргызОт"></div>
+            <div class="m-fg"><div class="m-lbl">Телефон</div><input class="m-inp" value="+996 705 200 722"></div>
+            <div class="m-fg"><div class="m-lbl">Email</div><input class="m-inp" value="info@kyrgyzot.kg"></div>
+            <div class="m-fg"><div class="m-lbl">Адрес</div><input class="m-inp" value="г. Нарын, ул. Ленина 69"></div>
+            <button class="abtn-primary" style="margin-top:4px;width:100%;justify-content:center">💾 Сохранить</button>
+          </div>
+          <div class="settings-card">
+            <div class="settings-title">🔔 Уведомления</div>
+            <div class="toggle-row"><div><div class="tgl-lbl">Новые заказы</div><div class="tgl-sub">Уведомлять о каждом</div></div><label class="toggle"><input type="checkbox" checked><div class="tgl-track"></div><div class="tgl-thumb"></div></label></div>
+            <div class="toggle-row"><div><div class="tgl-lbl">Мало на складе</div><div class="tgl-sub">При остатке менее 10</div></div><label class="toggle"><input type="checkbox" checked><div class="tgl-track"></div><div class="tgl-thumb"></div></label></div>
+            <div class="toggle-row"><div><div class="tgl-lbl">Отменённые заказы</div><div class="tgl-sub">Уведомлять об отмене</div></div><label class="toggle"><input type="checkbox"><div class="tgl-track"></div><div class="tgl-thumb"></div></label></div>
+            <div class="toggle-row"><div><div class="tgl-lbl">SMS уведомления</div><div class="tgl-sub">Отправлять клиентам</div></div><label class="toggle"><input type="checkbox" checked><div class="tgl-track"></div><div class="tgl-thumb"></div></label></div>
+          </div>
+          <div class="settings-card">
+            <div class="settings-title">🚚 Доставка</div>
+            <div class="m-fg"><div class="m-lbl">Мин. сумма заказа (сом)</div><input class="m-inp" value="5000" type="number"></div>
+            <div class="m-fg"><div class="m-lbl">Стоимость доставки (сом/км)</div><input class="m-inp" value="50" type="number"></div>
+            <div class="m-fg"><div class="m-lbl">Бесплатно при заказе от (сом)</div><input class="m-inp" value="50000" type="number"></div>
+            <button class="abtn-primary" style="margin-top:4px;width:100%;justify-content:center">💾 Сохранить</button>
+          </div>
+          <div class="settings-card">
+            <div class="settings-title">🛡️ Безопасность</div>
+            <div class="m-fg"><div class="m-lbl">Пароль администратора</div><input class="m-inp" type="password" value="admin123"></div>
+            <div class="m-fg"><div class="m-lbl">Подтверждение пароля</div><input class="m-inp" type="password" placeholder="Повторите пароль"></div>
+            <div class="toggle-row" style="margin-top:8px"><div><div class="tgl-lbl">Двойная аутентификация</div><div class="tgl-sub">Требовать код из SMS</div></div><label class="toggle"><input type="checkbox"><div class="tgl-track"></div><div class="tgl-thumb"></div></label></div>
+            <button class="abtn-primary" style="margin-top:12px;width:100%;justify-content:center">🔐 Сменить пароль</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-bg" id="successModal">
+  <div class="modal sm">
+    <div class="succ-modal">
+      <div class="succ-icon">🎉</div>
+      <div class="succ-title">Заказ принят!</div>
+      <p class="succ-sub">Ваш заказ успешно оформлен. Менеджер свяжется с вами в течение 30 минут.</p>
+      <button class="succ-btn" onclick="closeModal('successModal');clearOrder()">Отлично!</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="orderDetailModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="odTitle">Заказ</div><button class="modal-close" onclick="closeModal('orderDetailModal')">✕</button></div>
+    <div class="modal-body" id="odBody"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="newOrderModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">➕ Новый заказ</div><button class="modal-close" onclick="closeModal('newOrderModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="m-grid2">
+        <div class="m-fg"><div class="m-lbl">Имя и фамилия</div><input class="m-inp" id="no_name" placeholder="Айбек Жумабеков"></div>
+        <div class="m-fg"><div class="m-lbl">Телефон</div><input class="m-inp" id="no_phone" placeholder="+996 700 000 000"></div>
+        <div class="m-fg"><div class="m-lbl">Область</div>
+          <select class="m-inp" id="no_region"><option value="">Выбрать...</option><option>Чуйская</option><option>Ошская</option><option>Джалал-Абадская</option><option>Нарынская</option><option>Иссык-Кульская</option><option>Таласская</option><option>Баткенская</option></select>
+        </div>
+        <div class="m-fg"><div class="m-lbl">Нас. пункт</div><input class="m-inp" id="no_village" placeholder="Город / село"></div>
+        <div class="m-fg"><div class="m-lbl">Товар</div>
+          <select class="m-inp" id="no_prod"></select>
+        </div>
+        <div class="m-fg"><div class="m-lbl">Количество</div><input class="m-inp" id="no_qty" type="number" min="1" value="1"></div>
+        <div class="m-fg" style="grid-column:1/-1"><div class="m-lbl">Адрес</div><input class="m-inp" id="no_addr" placeholder="Улица, дом"></div>
+        <div class="m-fg" style="grid-column:1/-1"><div class="m-lbl">Оплата</div><select class="m-inp" id="no_pay"><option>Наличными при доставке</option><option>Мбанк / ОРА</option><option>Элкарт</option><option>Банковский перевод</option></select></div>
+      </div>
+      <button class="m-save" onclick="saveNewOrder()">💾 Сохранить заказ</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="prodModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="prodModalTitle">Добавить товар</div><button class="modal-close" onclick="closeModal('prodModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="pm_id">
+      <div class="m-grid2">
+        <div class="m-fg" style="grid-column:1/-1"><div class="m-lbl">Название</div><input class="m-inp" id="pm_name" placeholder="Уголь Кузбасский (Д)"></div>
+        <div class="m-fg" style="grid-column:1/-1"><div class="m-lbl">Описание</div><textarea class="m-inp" id="pm_desc" rows="2" placeholder="Краткое описание..."></textarea></div>
+        <div class="m-fg"><div class="m-lbl">Категория</div><select class="m-inp" id="pm_cat"><option value="coal">Уголь</option><option value="wood">Дрова</option><option value="briket">Брикеты</option></select></div>
+        <div class="m-fg"><div class="m-lbl">Единица</div><select class="m-inp" id="pm_unit"><option>тонна</option><option>склад. м³</option><option>мешок 40кг</option><option>мешок 50кг</option><option>кг</option></select></div>
+        <div class="m-fg"><div class="m-lbl">Цена (сом)</div><input class="m-inp" id="pm_price" type="number" placeholder="3200"></div>
+        <div class="m-fg"><div class="m-lbl">Остаток</div><input class="m-inp" id="pm_stock" type="number" placeholder="50"></div>
+        <div class="m-fg"><div class="m-lbl">Макс. остаток</div><input class="m-inp" id="pm_maxstock" type="number" placeholder="100"></div>
+        <div class="m-fg"><div class="m-lbl">Происхождение</div><input class="m-inp" id="pm_origin" placeholder="Россия, Кузбасс"></div>
+        <div class="m-fg" style="grid-column:1/-1"><div class="m-lbl">Иконка</div><div class="em-grid" id="pmEmojiGrid"></div></div>
+      </div>
+      <button class="m-save" onclick="saveProd()">💾 Сохранить товар</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="delModal">
+  <div class="modal sm">
+    <div class="conf-modal">
+      <div class="conf-icon">🗑️</div>
+      <div class="conf-title">Удалить?</div>
+      <div class="conf-sub" id="delConfText">Это действие нельзя отменить.</div>
+      <div class="conf-row"><button class="conf-no" onclick="closeModal('delModal')">Отмена</button><button class="conf-yes" onclick="confirmDel()">Удалить</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<div id="adminLoginScreen" style="display:none;position:fixed;inset:0;z-index:8000;background:#0d0f14;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 30% 70%,rgba(230,57,70,.15) 0%,transparent 65%),radial-gradient(ellipse 40% 50% at 75% 25%,rgba(244,162,97,.1) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:relative;z-index:2;text-align:center;margin-bottom:32px;">
+    <div style="font-size:48px;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(230,57,70,.6))">🔐</div>
+    <div style="font-family:'Unbounded',sans-serif;font-size:26px;font-weight:900;letter-spacing:-1px;">Кыргыз<span style="color:#e63946">От</span></div>
+    <div style="font-size:11px;color:#6b7280;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Панель администратора</div>
+  </div>
+  <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:36px 40px;width:min(400px,92vw);position:relative;z-index:2;backdrop-filter:blur(10px);">
+    <div id="loginError" style="display:none;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);border-radius:10px;padding:12px 16px;font-size:13px;color:#e63946;margin-bottom:18px;align-items:center;gap:8px;">⚠️ <span id="loginErrorMsg">Неверный логин или пароль</span></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+      <label style="font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:#6b7280;">Логин</label>
+      <div style="position:relative;">
+        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px;">👤</span>
+        <input id="loginUser" class="f-inp" style="padding-left:40px;background:rgba(255,255,255,.06);" placeholder="admin" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:24px;">
+      <label style="font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:#6b7280;">Пароль</label>
+      <div style="position:relative;">
+        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px;">🔑</span>
+        <input id="loginPass" type="password" class="f-inp" style="padding-left:40px;padding-right:44px;background:rgba(255,255,255,.06);" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        <button onclick="togglePassVis()" id="passVisBtn" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#6b7280;padding:2px;">👁</button>
+      </div>
+    </div>
+    <button onclick="doLogin()" id="loginBtn" style="width:100%;background:linear-gradient(135deg,#e63946,#c1121f);border:none;border-radius:12px;padding:15px;color:#fff;font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 24px rgba(230,57,70,.3);">Войти в панель</button>
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:#6b7280;">
+      Логин <code style="background:rgba(255,255,255,.08);padding:2px 7px;border-radius:5px;color:#e8eaf0;">Noo</code> / пароль <code style="background:rgba(255,255,255,.08);padding:2px 7px;border-radius:5px;color:#e8eaf0;">Noo</code>
+    </div>
+    
+  </div>
+  <button onclick="closeAdminLogin()" style="margin-top:20px;background:none;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 20px;color:#6b7280;font-size:13px;cursor:pointer;position:relative;z-index:2;">← Вернуться на сайт</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+// ═══════════════════ DATA ═══════════════════
+const REGIONS = [
+  {id:'chuy',  name:'Чуйская',          icon:'🏙️', villages:['Бишкек','Токмок','Кант','Кара-Балта','Беловодское','Сокулук','Ак-Суу','Ивановка']},
+  {id:'osh',   name:'Ошская',            icon:'🌾', villages:['Ош','Узген','Кара-Суу','Ноокат','Кызыл-Кыя','Алай','Папан','Барак']},
+  {id:'jalal', name:'Джалал-Абадская',   icon:'🌿', villages:['Джалал-Абад','Таш-Кумыр','Кок-Янгак','Майлуу-Суу','Базар-Коргон','Токтогул','Кербен']},
+  {id:'naryn', name:'Нарынская',         icon:'⛰️', villages:['Нарын','Ак-Талаа','Жумгал','Кочкор','Ат-Башы','Казарман','Чаек']},
+  {id:'issyk', name:'Иссык-Кульская',    icon:'🌊', villages:['Каракол','Балыкчы','Чолпон-Ата','Бостери','Тюп','Ак-Суу','Боконбаево']},
+  {id:'talas', name:'Таласская',         icon:'🌄', villages:['Талас','Кара-Буура','Кызыл-Адыр','Бакай-Ата','Манас','Покровка']},
+  {id:'batken',name:'Баткенская',        icon:'🏜️', villages:['Баткен','Кызыл-Кия','Сулюкта','Лейлек','Исфана','Айдаркен']},
+];
+
+const STATUSES = {
+  new:{label:'Новый',cls:'s-new'}, confirm:{label:'Подтверждён',cls:'s-confirm'},
+  delivery:{label:'Доставляется',cls:'s-delivery'}, done:{label:'Выполнен',cls:'s-done'}, cancel:{label:'Отменён',cls:'s-cancel'}
+};
+const CAT_LABELS = {coal:'Уголь',wood:'Дрова',briket:'Брикеты'};
+const CAT_ICONS  = {coal:'🪨',wood:'🪵',briket:'🟫'};
+const EMOJIS = ['⬛','🪨','💎','🪵','🌳','🟫','🔥','⛏️','🏔️','🌑','🪶','🌲','♨️','🏭','🌿','🟤'];
+
+let products = [
+  {id:1,name:'Уголь Кузбасский (Д)', desc:'Длиннопламенный уголь высшего сорта. 5800 ккал/кг. Лучший для котлов.',          cat:'coal',  unit:'тонна',       price:3200,stock:85, maxStock:100,origin:'Россия, Кузбасс',  emoji:'⬛',active:true, hit:true},
+  {id:2,name:'Уголь Шубаркуль',      desc:'Казахстанский уголь. Низкая зольность, экологичное горение.',                    cat:'coal',  unit:'тонна',       price:2900,stock:42, maxStock:100,origin:'Казахстан',        emoji:'🪨',active:true, hit:false},
+  {id:3,name:'Антрацит',             desc:'Самый жаркий уголь. 8600 ккал/кг. Идеален для длительного обогрева.',           cat:'coal',  unit:'тонна',       price:4500,stock:8,  maxStock:60, origin:'Россия',           emoji:'💎',active:true, hit:false},
+  {id:4,name:'Дрова берёзовые',      desc:'Сухие колотые дрова. Влажность ≤20%. Отличное разжигание.',                      cat:'wood',  unit:'склад. м³',   price:1800,stock:55, maxStock:80, origin:'Кыргызстан',       emoji:'🪵',active:true, hit:true},
+  {id:5,name:'Дрова плодовые',       desc:'Яблоня, вишня, слива. Долгое горение и ароматный дым. Для мангала.',             cat:'wood',  unit:'склад. м³',   price:2100,stock:6,  maxStock:50, origin:'Кыргызстан',       emoji:'🌳',active:true, hit:false},
+  {id:6,name:'Брикеты торфяные',     desc:'Прессованный торф. Горение 4–6 часов, минимум золы. Удобная фасовка.',           cat:'briket',unit:'мешок 40кг',  price:950, stock:120,maxStock:200,origin:'Беларусь',         emoji:'🟫',active:true, hit:false},
+];
+let prodNextId = 7;
+
+// helpers declared BEFORE orders so mk() and dA() are available during array init
+let ordNextId = 1;
+
+function dA(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString();}
+function mk(name,phone,region,village,address,payment,items,status,date){
+  const prices = {
+    'Уголь Кузбасский (Д)':3200,'Уголь Шубаркуль':2900,'Антрацит':4500,
+    'Дрова берёзовые':1800,'Дрова плодовые':2100,'Брикеты торфяные':950
+  };
+  const total = items.reduce((s,i)=>s+(prices[i.n]||0)*i.q,0);
+  return {id:'KO-'+String(ordNextId++).padStart(4,'0'),name,phone,region,village,address,payment,items,status,date,total};
+}
+
+let orders = [
+  mk('Айбек Жумабеков','+996700123456','Чуйская','Бишкек','ул.Манаса 12','Наличными',[{n:'Уголь Кузбасский (Д)',q:2},{n:'Брикеты торфяные',q:5}],'done',dA(5)),
+  mk('Гүлнара Асанова', '+996550987321','Ошская','Ош','ул.Ленина 45','Мбанк',[{n:'Антрацит',q:1},{n:'Дрова берёзовые',q:3}],'delivery',dA(1)),
+  mk('Бакыт Токтосунов','+996770456789','Иссык-Кульская','Каракол','пер.Дружбы 7','Элкарт',[{n:'Уголь Шубаркуль',q:3}],'confirm',dA(2)),
+  mk('Нурзат Карыбекова','+996500321654','Нарынская','Нарын','ул.Советская 23','Наличными',[{n:'Дрова плодовые',q:4}],'new',dA(0)),
+  mk('Мамытбек Исаков','+996700654123','Джалал-Абадская','Джалал-Абад','ул.Эркиндик 56','Элкарт',[{n:'Уголь Кузбасский (Д)',q:5}],'new',dA(0)),
+  mk('Айгерим Сыдыкова','+996550111222','Таласская','Талас','Мкр2 д.18','Банк',[{n:'Антрацит',q:2}],'done',dA(8)),
+  mk('Эрлан Бакытбеков','+996770333444','Баткенская','Баткен','ул.Ошская 3','Наличными',[{n:'Дрова берёзовые',q:2}],'cancel',dA(3)),
+  mk('Самара Токова',   '+996500555666','Чуйская','Кант','ул.Центральная','Мбанк',[{n:'Брикеты торфяные',q:20}],'delivery',dA(1)),
+  mk('Руслан Дуйшеев', '+996700777888','Ошская','Узген','Молодёжный 5','Элкарт',[{n:'Уголь Шубаркуль',q:1},{n:'Антрацит',q:1}],'confirm',dA(2)),
+  mk('Аида Мамытова',  '+996550999000','Иссык-Кульская','Чолпон-Ата','Набережная 12','Наличными',[{n:'Уголь Шубаркуль',q:4}],'new',dA(0)),
+];
+
+let cart = {};
+let selRegion = null, selVillage = '';
+let delTarget = null, delType = '';
+let pmEmoji = '⬛';
+function fmtD(iso){const d=new Date(iso);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function fmtDT(iso){const d=new Date(iso);return fmtD(iso)+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});}
+function pPrice(name){return products.find(p=>p.name===name)?.price||0;}
+
+// ═══════════════════ ONBOARDING ═══════════════════
+const rGrid = document.getElementById('regionGrid');
+REGIONS.forEach(r=>{
+  const btn = document.createElement('button');
+  btn.className='reg-btn';
+  btn.innerHTML=`<span style="font-size:18px">${r.icon}</span>${r.name}`;
+  btn.onclick=()=>{
+    document.querySelectorAll('.reg-btn').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel'); selRegion=r;
+    document.getElementById('btnToStep2').disabled=false;
+  };
+  rGrid.appendChild(btn);
+});
+
+function goStep2(){
+  if(!selRegion) return;
+  document.getElementById('onbStep1').classList.remove('active');
+  document.getElementById('onbStep2').classList.add('active');
+  document.getElementById('d1').classList.remove('active');
+  document.getElementById('d2').classList.add('active');
+  const sel=document.getElementById('villageSelect');
+  sel.innerHTML='<option value="">— Выберите —</option>';
+  selRegion.villages.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
+}
+function onVillage(){
+  selVillage=document.getElementById('villageSelect').value;
+  document.getElementById('btnEnter').disabled=!selVillage;
+}
+function enterSite(){
+  if(!selVillage) return;
+  document.getElementById('onboarding').classList.add('hide');
+  setTimeout(()=>document.getElementById('onboarding').style.display='none',600);
+  document.getElementById('clientSite').style.display='block';
+  document.getElementById('headerLoc').textContent=`${selRegion.name} — ${selVillage}`;
+  document.getElementById('catDelivery').textContent=`🚚 Доставка в: ${selVillage}`;
+  renderHomeProducts(); renderCatalog();
+}
+function resetLocation(){
+  document.getElementById('onboarding').style.display='flex';
+  document.getElementById('onboarding').classList.remove('hide');
+  setTimeout(()=>{
+    document.getElementById('onbStep1').classList.add('active');
+    document.getElementById('onbStep2').classList.remove('active');
+    document.getElementById('d1').classList.add('active');
+    document.getElementById('d2').classList.remove('active');
+    document.getElementById('btnToStep2').disabled=true;
+    document.querySelectorAll('.reg-btn').forEach(b=>b.classList.remove('sel'));
+    selRegion=null; selVillage='';
+  },100);
+}
+
+// ═══════════════════ CLIENT PAGES ═══════════════════
+function showClientPage(name){
+  document.getElementById('adminSite').classList.remove('active');
+  document.getElementById('clientSite').style.display='block';
+  document.querySelectorAll('.client-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('pg-'+name).classList.add('active');
+  document.querySelector(`.nav-link[onclick*="${name}"]`)?.classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='order') renderCart();
+  if(name==='catalog') renderCatalog();
+}
+
+function showAdmin(){
+  document.getElementById('clientSite').style.display='none';
+  document.getElementById('adminSite').classList.add('active');
+  showAdminPage('dashboard');
+}
+function showClient(){
+  document.getElementById('adminSite').classList.remove('active');
+  document.getElementById('clientSite').style.display='block';
+}
+
+// ═══════════════════ PRODUCTS RENDER ═══════════════════
+function prodCardHTML(p,ctx){
+  const qty = cart[p.id]?.qty||0;
+  const qtyBlock = qty===0
+    ? `<button class="add-btn" onclick="addToCart(${p.id})">+</button>`
+    : `<div class="qty-ctrl"><button class="qty-btn" onclick="chQty(${p.id},-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="chQty(${p.id},1)">+</button></div>`;
+  return `<div class="prod-card">
+    ${p.hit?'<div style="position:absolute;top:12px;right:12px;background:rgba(244,162,97,.15);border:1px solid rgba(244,162,97,.4);color:var(--gold);border-radius:20px;padding:3px 8px;font-size:10px;font-weight:600">🏆 Хит</div>':''}
+    <div class="prod-icon">${p.emoji}</div>
+    <div class="prod-name">${p.name}</div>
+    <div class="prod-desc">${p.desc}</div>
+    <div class="prod-bot">
+      <div class="prod-price">${p.price.toLocaleString()} сом <small>/ ${p.unit}</small></div>
+      ${p.stock>0 ? qtyBlock : '<span style="font-size:12px;color:var(--ember)">Нет в наличии</span>'}
+    </div>
+  </div>`;
+}
+
+function renderHomeProducts(){
+  const top = products.filter(p=>p.active&&p.hit).concat(products.filter(p=>p.active&&!p.hit)).slice(0,4);
+  document.getElementById('homeProductsGrid').innerHTML = top.map(p=>prodCardHTML(p,'home')).join('');
+}
+function renderCatalog(){
+  const q=document.getElementById('catSearch')?.value.toLowerCase()||'';
+  const cat=document.getElementById('catCatFilter')?.value||'';
+  let list=products.filter(p=>p.active&&(!q||p.name.toLowerCase().includes(q))&&(!cat||p.cat===cat));
+  document.getElementById('catalogGrid').innerHTML = list.length ? list.map(p=>prodCardHTML(p,'cat')).join('') : '<div style="color:var(--smoke);padding:40px;text-align:center;grid-column:1/-1">Товары не найдены</div>';
+}
+
+function addToCart(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  if(!cart[id]) cart[id]={...p,qty:0};
+  cart[id].qty++;
+  updateCartUI();
+  showToast(`${p.emoji} ${p.name} добавлен в корзину`);
+}
+function chQty(id,d){
+  if(!cart[id]) return;
+  cart[id].qty+=d;
+  if(cart[id].qty<=0) delete cart[id];
+  updateCartUI();
+}
+function removeFromCart(id){delete cart[id]; updateCartUI();}
+function updateCartUI(){
+  renderHomeProducts(); renderCatalog();
+  const total=Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);
+  const cnt=Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCnt').textContent=cnt;
+  if(document.getElementById('pg-order').classList.contains('active')) renderCart();
+}
+function renderCart(){
+  const keys=Object.keys(cart);
+  const list=document.getElementById('cartItemsList');
+  const tb=document.getElementById('cartTotalBlock');
+  if(!keys.length){list.innerHTML='<div class="empty-cart-msg">Корзина пуста<br>Добавьте товары в каталоге 👆</div>';tb.style.display='none';return;}
+  let total=0;
+  list.innerHTML=keys.map(id=>{
+    const i=cart[id]; const sub=i.price*i.qty; total+=sub;
+    return `<div class="cart-item"><div><div class="ci-name">${i.emoji} ${i.name}</div><div class="ci-qty">${i.qty} ${i.unit}</div></div><div style="display:flex;align-items:center;gap:8px"><div class="ci-price">${sub.toLocaleString()} сом</div><button class="ci-rm" onclick="removeFromCart('${id}')">✕</button></div></div>`;
+  }).join('');
+  document.getElementById('cartTotalVal').textContent=total.toLocaleString()+' сом';
+  tb.style.display='flex';
+}
+
+function submitOrder(){
+  const fname=document.getElementById('o_fname').value.trim();
+  const phone=document.getElementById('o_phone').value.trim();
+  const addr=document.getElementById('o_addr').value.trim();
+  const pay=document.getElementById('o_pay').value;
+  if(!fname){showToast('⚠️ Введите имя');return;}
+  if(!phone){showToast('⚠️ Введите телефон');return;}
+  if(!addr){showToast('⚠️ Введите адрес');return;}
+  if(!pay){showToast('⚠️ Выберите оплату');return;}
+  if(!Object.keys(cart).length){showToast('⚠️ Корзина пуста');return;}
+  const items=Object.values(cart).map(i=>({n:i.name,q:i.qty}));
+  const lname=document.getElementById('o_lname').value.trim();
+  const fullname=fname+(lname?' '+lname:'');
+  const newOrd=mk(fullname,phone,selRegion?.name||'—',selVillage||'—',addr,pay,items,'new',new Date().toISOString());
+  orders.unshift(newOrd);
+  openModal('successModal');
+}
+function clearOrder(){
+  cart={};updateCartUI();
+  ['o_fname','o_lname','o_phone','o_addr','o_comment'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('o_pay').value='';
+}
+function sendContact(){
+  const n=document.getElementById('cont_name').value.trim();
+  if(!n){showToast('⚠️ Введите имя');return;}
+  showToast('✅ Сообщение отправлено! Мы свяжемся с вами.');
+  document.getElementById('cont_name').value='';
+  document.getElementById('cont_phone').value='';
+  document.getElementById('cont_msg').value='';
+}
+
+// ═══════════════════ ADMIN PAGES ═══════════════════
+function showAdminPage(name){
+  document.querySelectorAll('#adminSite .page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.adm-nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('adm-'+name).classList.add('active');
+  document.getElementById('anv-'+name)?.classList.add('active');
+  if(name==='dashboard') renderDashboard();
+  if(name==='orders'){renderOrderStats();renderOrders();}
+  if(name==='products') renderProducts();
+  if(name==='clients') renderClients();
+  if(name==='analytics') renderAnalytics();
+}
+
+// DASHBOARD
+function renderDashboard(){
+  const now=new Date();
+  document.getElementById('admDate').textContent=now.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('ds-total').textContent=orders.length;
+  const nw=orders.filter(o=>o.status==='new').length;
+  document.getElementById('ds-new').textContent=nw;
+  document.getElementById('newOrdersBadge').textContent=nw;
+  const rev=orders.filter(o=>o.status==='done').reduce((s,o)=>s+o.total,0);
+  document.getElementById('ds-rev').textContent=rev.toLocaleString();
+  const clients=[...new Set(orders.map(o=>o.phone))].length;
+  document.getElementById('ds-clients').textContent=clients;
+  // Recent
+  document.getElementById('recentOrdersTbl').innerHTML=orders.slice(0,5).map(o=>
+    `<tr class="trow" onclick="openOrderDetail('${o.id}')"><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${o.id}</td><td style="font-size:13px">${o.name}</td><td style="color:var(--gold);font-weight:700;font-size:13px">${o.total.toLocaleString()}</td><td><span class="status ${STATUSES[o.status].cls}">${STATUSES[o.status].label}</span></td></tr>`
+  ).join('');
+  // Low stock
+  const low=products.filter(p=>p.stock<15).sort((a,b)=>a.stock-b.stock);
+  document.getElementById('lowStockTbl').innerHTML=low.map(p=>
+    `<tr><td style="font-size:13px">${p.emoji} ${p.name}</td><td style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${p.stock===0?'var(--ember)':'var(--yellow)'}">${p.stock}</td><td>${p.stock===0?'<span style="color:var(--ember);font-size:12px">❌ Нет</span>':'<span style="color:var(--yellow);font-size:12px">⚠️ Мало</span>'}</td></tr>`
+  ).join('');
+}
+
+// ORDERS
+function renderOrderStats(){
+  document.getElementById('os-total').textContent=orders.length;
+  document.getElementById('os-new').textContent=orders.filter(o=>o.status==='new').length;
+  document.getElementById('os-del').textContent=orders.filter(o=>o.status==='delivery').length;
+  document.getElementById('os-done').textContent=orders.filter(o=>o.status==='done').length;
+}
+function renderOrders(){
+  renderOrderStats();
+  const q=document.getElementById('ordSearch').value.toLowerCase();
+  const st=document.getElementById('ordStatus').value;
+  const rg=document.getElementById('ordRegion').value;
+  let list=orders.filter(o=>{
+    const mq=!q||o.name.toLowerCase().includes(q)||o.phone.includes(q)||o.id.toLowerCase().includes(q);
+    return mq&&(!st||o.status===st)&&(!rg||o.region===rg);
+  });
+  document.getElementById('ordCount').textContent=`Показано: ${list.length} / ${orders.length}`;
+  const empty=document.getElementById('ordEmpty');
+  const body=document.getElementById('ordersTbody');
+  if(!list.length){body.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  body.innerHTML=list.map(o=>{
+    const items=o.items.map(i=>`<span style="background:rgba(255,255,255,.07);border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap">${i.n} ×${i.q}</span>`).join(' ');
+    return `<tr class="trow" onclick="openOrderDetail('${o.id}')">
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${o.id}</td>
+      <td><div style="font-weight:600;font-size:13px">${o.name}</div><div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">${o.phone}</div></td>
+      <td><div style="font-size:13px">${o.village}</div><div style="font-size:11px;color:var(--muted)">${o.region}</div></td>
+      <td style="max-width:180px">${items}</td>
+      <td style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--gold);white-space:nowrap">${o.total.toLocaleString()} сом</td>
+      <td><span class="status ${STATUSES[o.status].cls}">${STATUSES[o.status].label}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap">${fmtD(o.date)}</td>
+      <td onclick="event.stopPropagation()"><div class="act-btns">
+        <button class="act-btn ok" onclick="qStatus('${o.id}','done')" title="Выполнен">✅</button>
+        <button class="act-btn" onclick="qStatus('${o.id}','delivery')" title="В доставке">🚚</button>
+        <button class="act-btn dl" onclick="qStatus('${o.id}','cancel')" title="Отменить">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function qStatus(id,st){
+  const o=orders.find(x=>x.id===id); if(!o) return;
+  o.status=st; renderOrders(); renderDashboard();
+  showToast(`✅ Статус заказа ${id} → ${STATUSES[st].label}`);
+}
+
+function openOrderDetail(id){
+  const o=orders.find(x=>x.id===id); if(!o) return;
+  document.getElementById('odTitle').textContent=`Заказ ${o.id}`;
+  const itemRows=o.items.map(i=>{
+    const sub=pPrice(i.n)*i.q;
+    return `<div class="od-item-row"><span>${products.find(p=>p.name===i.n)?.emoji||'📦'} ${i.n} × ${i.q}</span><span style="color:var(--gold);font-weight:600">${sub.toLocaleString()} сом</span></div>`;
+  }).join('');
+  const scBtns=Object.entries(STATUSES).map(([k,v])=>
+    `<button class="sc-btn${o.status===k?' actv':''}" onclick="qStatus('${o.id}','${k}');renderDetailStatus('${o.id}')">${v.label}</button>`
+  ).join('');
+  document.getElementById('odBody').innerHTML=`
+    <div class="od-grid">
+      <div class="od-item"><div class="od-lbl">Клиент</div><div class="od-val">${o.name}</div></div>
+      <div class="od-item"><div class="od-lbl">Телефон</div><div class="od-val" style="font-family:'JetBrains Mono',monospace">${o.phone}</div></div>
+      <div class="od-item"><div class="od-lbl">Область</div><div class="od-val">${o.region}</div></div>
+      <div class="od-item"><div class="od-lbl">Населённый пункт</div><div class="od-val">${o.village}</div></div>
+      <div class="od-item" style="grid-column:1/-1"><div class="od-lbl">Адрес</div><div class="od-val">${o.address}</div></div>
+      <div class="od-item"><div class="od-lbl">Оплата</div><div class="od-val">${o.payment}</div></div>
+      <div class="od-item"><div class="od-lbl">Дата</div><div class="od-val" style="font-family:'JetBrains Mono',monospace;font-size:13px">${fmtDT(o.date)}</div></div>
+    </div>
+    <div style="font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">СОСТАВ ЗАКАЗА</div>
+    <div class="od-items">${itemRows}<div class="od-total"><span>Итого</span><span>${o.total.toLocaleString()} сом</span></div></div>
+    <div style="font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">ИЗМЕНИТЬ СТАТУС</div>
+    <div class="status-change" id="odStatusChange">${scBtns}</div>`;
+  openModal('orderDetailModal');
+}
+function renderDetailStatus(id){
+  const o=orders.find(x=>x.id===id); if(!o) return;
+  document.querySelectorAll('#odStatusChange .sc-btn').forEach((b,i)=>{
+    const k=Object.keys(STATUSES)[i];
+    b.classList.toggle('actv',o.status===k);
+  });
+  renderOrders(); renderDashboard();
+}
+
+function openNewOrderModal(){
+  const sel=document.getElementById('no_prod');
+  sel.innerHTML=products.map(p=>`<option>${p.name}</option>`).join('');
+  openModal('newOrderModal');
+}
+function saveNewOrder(){
+  const name=document.getElementById('no_name').value.trim();
+  const phone=document.getElementById('no_phone').value.trim();
+  const region=document.getElementById('no_region').value;
+  const village=document.getElementById('no_village').value.trim();
+  if(!name||!phone||!region||!village){showToast('⚠️ Заполните обязательные поля');return;}
+  const prodName=document.getElementById('no_prod').value;
+  const qty=parseInt(document.getElementById('no_qty').value)||1;
+  const addr=document.getElementById('no_addr').value;
+  const pay=document.getElementById('no_pay').value;
+  const o=mk(name,phone,region,village,addr,pay,[{n:prodName,q:qty}],'new',new Date().toISOString());
+  orders.unshift(o);
+  closeModal('newOrderModal');
+  renderOrders(); renderDashboard();
+  showToast(`🎉 Заказ ${o.id} добавлен`);
+}
+
+// PRODUCTS ADMIN
+function renderProducts(){
+  const q=document.getElementById('prodSearch').value.toLowerCase();
+  const cat=document.getElementById('prodCat').value;
+  const stk=document.getElementById('prodStock').value;
+  document.getElementById('ps-total').textContent=products.length;
+  document.getElementById('ps-active').textContent=products.filter(p=>p.active).length;
+  document.getElementById('ps-low').textContent=products.filter(p=>p.stock>0&&p.stock<10).length;
+  const avg=Math.round(products.reduce((s,p)=>s+p.price,0)/products.length);
+  document.getElementById('ps-avg').textContent=avg.toLocaleString();
+  let list=products.filter(p=>{
+    const mq=!q||p.name.toLowerCase().includes(q);
+    const mc=!cat||p.cat===cat;
+    const ms=!stk||(stk==='ok'&&p.stock>=10)||(stk==='low'&&p.stock>0&&p.stock<10)||(stk==='out'&&p.stock===0);
+    return mq&&mc&&ms;
+  });
+  const COLORS=['rgba(59,130,246,.15)','rgba(230,57,70,.15)','rgba(244,162,97,.15)','rgba(34,197,94,.15)','rgba(168,85,247,.15)','rgba(6,182,212,.15)'];
+  document.getElementById('prodGrid').innerHTML=list.map((p,i)=>{
+    const pct=p.maxStock>0?Math.round((p.stock/p.maxStock)*100):0;
+    const bc=p.stock===0?'var(--ember)':p.stock<10?'var(--yellow)':'var(--green)';
+    const sval=p.stock===0?'❌ Нет':p.stock<10?'⚠️ Мало':'✅ Норма';
+    const scol=p.stock===0?'var(--ember)':p.stock<10?'var(--yellow)':'var(--green)';
+    return `<div class="apc" style="position:relative">
+      <div style="position:absolute;top:10px;right:10px;font-size:10px;padding:3px 7px;border-radius:20px;${p.active?'background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)':'background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);color:var(--ember)'}">${p.active?'Активен':'Скрыт'}</div>
+      <div class="apc-top">
+        <div class="apc-ico" style="background:${COLORS[i%COLORS.length]}">${p.emoji}</div>
+        <div><div class="apc-name">${p.name}</div><div class="apc-cat">${CAT_ICONS[p.cat]} ${CAT_LABELS[p.cat]} · ${p.origin}</div></div>
+      </div>
+      <div class="apc-stock">
+        <div class="apc-srow"><span class="apc-slbl">Остаток</span><span style="color:${scol};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">${p.stock}/${p.maxStock} — ${sval}</span></div>
+        <div class="bar"><div class="bar-f" style="width:${pct}%;background:${bc}"></div></div>
+      </div>
+      <div class="apc-bot">
+        <div><div class="apc-price">${p.price.toLocaleString()} сом</div><div class="apc-unit">/ ${p.unit}</div></div>
+        <div class="apc-actions">
+          <div class="apca ed" onclick="openProdModal(${p.id})" title="Редактировать">✏️</div>
+          <div class="apca" onclick="toggleProd(${p.id})">${p.active?'👁️':'🙈'}</div>
+          <div class="apca dl" onclick="openDel('prod',${p.id},'${p.name}')">🗑️</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openProdModal(id){
+  pmEmoji='⬛';
+  document.getElementById('pm_id').value=id||'';
+  document.getElementById('prodModalTitle').textContent=id?'✏️ Редактировать товар':'➕ Добавить товар';
+  if(id){
+    const p=products.find(x=>x.id===id);
+    if(p){
+      document.getElementById('pm_name').value=p.name;
+      document.getElementById('pm_desc').value=p.desc;
+      document.getElementById('pm_cat').value=p.cat;
+      document.getElementById('pm_unit').value=p.unit;
+      document.getElementById('pm_price').value=p.price;
+      document.getElementById('pm_stock').value=p.stock;
+      document.getElementById('pm_maxstock').value=p.maxStock;
+      document.getElementById('pm_origin').value=p.origin;
+      pmEmoji=p.emoji;
+    }
+  } else {
+    ['pm_name','pm_desc','pm_price','pm_stock','pm_maxstock','pm_origin'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('pm_cat').value='coal';
+    document.getElementById('pm_unit').value='тонна';
+  }
+  document.getElementById('pmEmojiGrid').innerHTML=EMOJIS.map(e=>`<div class="em-btn${e===pmEmoji?' sel':''}" onclick="selEmoji('${e}',this)">${e}</div>`).join('');
+  openModal('prodModal');
+}
+function selEmoji(e,el){pmEmoji=e;document.querySelectorAll('.em-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');}
+function saveProd(){
+  const name=document.getElementById('pm_name').value.trim();
+  const price=parseInt(document.getElementById('pm_price').value);
+  const stock=parseInt(document.getElementById('pm_stock').value);
+  if(!name||isNaN(price)||isNaN(stock)){showToast('⚠️ Заполните обязательные поля');return;}
+  const id=document.getElementById('pm_id').value;
+  const data={name,price,stock,maxStock:parseInt(document.getElementById('pm_maxstock').value)||100,
+    desc:document.getElementById('pm_desc').value,cat:document.getElementById('pm_cat').value,
+    unit:document.getElementById('pm_unit').value,origin:document.getElementById('pm_origin').value,
+    emoji:pmEmoji,active:true,hit:false};
+  if(id){
+    const idx=products.findIndex(x=>x.id===parseInt(id));
+    if(idx>-1) products[idx]={...products[idx],...data};
+    showToast(`✅ Товар "${name}" обновлён`);
+  } else {
+    products.push({id:prodNextId++,...data});
+    showToast(`🎉 Товар "${name}" добавлен`);
+  }
+  closeModal('prodModal'); renderProducts(); renderCatalog(); renderHomeProducts();
+}
+function toggleProd(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  p.active=!p.active; renderProducts(); renderCatalog(); renderHomeProducts();
+  showToast(`${p.active?'✅':'🙈'} Товар "${p.name}" ${p.active?'активирован':'скрыт'}`);
+}
+
+// CLIENTS
+function renderClients(){
+  const q=document.getElementById('cliSearch').value.toLowerCase();
+  const map={};
+  orders.forEach(o=>{
+    if(!map[o.phone]) map[o.phone]={name:o.name,phone:o.phone,region:o.region,count:0,total:0,last:o.date};
+    map[o.phone].count++;
+    map[o.phone].total+=o.total;
+    if(o.date>map[o.phone].last) map[o.phone].last=o.date;
+  });
+  let list=Object.values(map).filter(c=>!q||c.name.toLowerCase().includes(q)||c.phone.includes(q));
+  list.sort((a,b)=>b.total-a.total);
+  document.getElementById('cliCount').textContent=`Клиентов: ${list.length}`;
+  document.getElementById('clientsTbody').innerHTML=list.map((c,i)=>{
+    const initials=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<tr class="trow">
+      <td style="color:var(--muted);font-size:12px">${i+1}</td>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="client-avatar">${initials}</div><div style="font-weight:600;font-size:13px">${c.name}</div></div></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">${c.phone}</td>
+      <td style="font-size:13px">${c.region}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--blue);font-weight:600">${c.count}</td>
+      <td style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--gold)">${c.total.toLocaleString()}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${fmtD(c.last)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ANALYTICS
+function renderAnalytics(){
+  // Month chart
+  const months=['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+  const mc=new Array(12).fill(0);
+  orders.forEach(o=>{mc[new Date(o.date).getMonth()]++;});
+  const maxM=Math.max(...mc,1);
+  document.getElementById('monthChart').innerHTML=mc.map((v,i)=>{
+    const h=Math.round((v/maxM)*140);
+    return `<div class="bc-bar"><div class="bc-val">${v||''}</div><div class="bc-fill" style="height:${h}px;background:linear-gradient(180deg,var(--ember),var(--gold))"></div><div class="bc-lbl">${months[i]}</div></div>`;
+  }).join('');
+  // Donut
+  const cats={coal:0,wood:0,briket:0};
+  orders.forEach(o=>o.items.forEach(i=>{
+    const p=products.find(x=>x.name===i.n); if(p) cats[p.cat]=(cats[p.cat]||0)+i.q;
+  }));
+  const total=Object.values(cats).reduce((s,v)=>s+v,0)||1;
+  const colors=['var(--ember)','var(--gold)','var(--cyan)'];
+  const ckeys=Object.keys(cats);
+  let offset=25;
+  const segments=ckeys.map((k,i)=>{
+    const pct=(cats[k]/total)*100;
+    const seg=`<circle cx="18" cy="18" r="15.9" fill="none" stroke="${colors[i]}" stroke-width="3.5" stroke-dasharray="${pct} ${100-pct}" stroke-dashoffset="${-offset+25}" style="transition:all .5s"/>`;
+    offset+=pct; return seg;
+  });
+  document.getElementById('donutSvg').innerHTML=`<circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="3.5"/>${segments.join('')}`;
+  document.getElementById('donutLegend').innerHTML=ckeys.map((k,i)=>
+    `<div class="dl-item"><div class="dl-dot" style="background:${colors[i]}"></div><div class="dl-name">${CAT_LABELS[k]}</div><div class="dl-pct">${Math.round((cats[k]/total)*100)}%</div></div>`
+  ).join('');
+  // Regions
+  const rc={};
+  orders.forEach(o=>rc[o.region]=(rc[o.region]||0)+1);
+  const maxR=Math.max(...Object.values(rc),1);
+  const regionIcons={Чуйская:'🏙️',Ошская:'🌾','Джалал-Абадская':'🌿',Нарынская:'⛰️','Иссык-Кульская':'🌊',Таласская:'🌄',Баткенская:'🏜️'};
+  document.getElementById('regionStats').innerHTML=Object.entries(rc).sort((a,b)=>b[1]-a[1]).map(([r,cnt])=>
+    `<div class="rst"><span class="rst-icon">${regionIcons[r]||'📍'}</span><span class="rst-name">${r}</span><div class="rst-bar-wrap"><div class="rst-bar"><div class="rst-fill" style="width:${Math.round((cnt/maxR)*100)}%"></div></div></div><span class="rst-cnt">${cnt}</span></div>`
+  ).join('');
+  // Top products
+  const pc={};
+  orders.forEach(o=>o.items.forEach(i=>pc[i.n]=(pc[i.n]||0)+i.q));
+  document.getElementById('topProducts').innerHTML=Object.entries(pc).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([n,cnt],i)=>{
+    const p=products.find(x=>x.name===n);
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900;color:var(--muted);width:20px">${i+1}</span>
+      <span style="font-size:20px">${p?.emoji||'📦'}</span>
+      <span style="flex:1;font-size:13px">${n}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);font-weight:600">${cnt} ед.</span>
+    </div>`;
+  }).join('');
+}
+
+// DELETE
+function openDel(type,id,name){
+  delType=type; delTarget=id;
+  document.getElementById('delConfText').textContent=`"${name}" будет удалён. Это нельзя отменить.`;
+  openModal('delModal');
+}
+function confirmDel(){
+  if(delType==='prod'){
+    const p=products.find(x=>x.id===delTarget);
+    products=products.filter(x=>x.id!==delTarget);
+    renderProducts(); renderCatalog(); renderHomeProducts();
+    showToast(`🗑️ Товар "${p?.name}" удалён`);
+  }
+  closeModal('delModal'); delTarget=null;
+}
+
+// EXPORT
+function exportOrdersCSV(){
+  const cols=['ID','Клиент','Телефон','Область','Нас. пункт','Товары','Сумма','Статус','Дата'];
+  const rows=orders.map(o=>[o.id,o.name,o.phone,o.region,o.village,o.items.map(i=>`${i.n}x${i.q}`).join('; '),o.total,STATUSES[o.status].label,fmtD(o.date)]);
+  dlCSV([cols,...rows],'orders.csv');
+}
+function exportProductsCSV(){
+  const cols=['ID','Название','Кат.','Цена','Единица','Остаток','Активен'];
+  const rows=products.map(p=>[p.id,p.name,CAT_LABELS[p.cat],p.price,p.unit,p.stock,p.active?'Да':'Нет']);
+  dlCSV([cols,...rows],'products.csv');
+}
+function exportClientsCSV(){
+  const map={};
+  orders.forEach(o=>{
+    if(!map[o.phone]) map[o.phone]={name:o.name,phone:o.phone,region:o.region,count:0,total:0};
+    map[o.phone].count++; map[o.phone].total+=o.total;
+  });
+  const cols=['Клиент','Телефон','Область','Заказов','Сумма'];
+  const rows=Object.values(map).map(c=>[c.name,c.phone,c.region,c.count,c.total]);
+  dlCSV([cols,...rows],'clients.csv');
+}
+function dlCSV(data,filename){
+  const csv=data.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+  showToast('📥 Файл загружен');
+}
+
+// MODAL UTILS
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-bg').forEach(mb=>{
+  mb.addEventListener('click',function(e){if(e.target===this) this.classList.remove('open');});
+});
+
+// TOAST
+let toastT;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show'); clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// INIT
+document.getElementById('admDate')&&(document.getElementById('admDate').textContent=new Date().toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}));
+
+
+
+
+// ═══════════ AUTH ═══════════
+let ADMIN_CREDS = { login: 'eldar', password: 'eldar123' };
+
+function openAdminLogin() {
+  document.getElementById('adminLoginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  setTimeout(() => document.getElementById('loginUser').focus(), 100);
+}
+function closeAdminLogin() {
+  document.getElementById('adminLoginScreen').style.display = 'none';
+}
+function togglePassVis() {
+  const inp = document.getElementById('loginPass');
+  const btn = document.getElementById('passVisBtn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const btn  = document.getElementById('loginBtn');
+  const err  = document.getElementById('loginError');
+  err.style.display = 'none';
+  if (!user || !pass) { document.getElementById('loginErrorMsg').textContent = 'Введите логин и пароль'; err.style.display = 'flex'; return; }
+  btn.textContent = 'Проверка...'; btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Войти в панель'; btn.disabled = false;
+    if (user === ADMIN_CREDS.login && pass === ADMIN_CREDS.password) {
+      document.getElementById('adminLoginScreen').style.display = 'none';
+      showAdmin();
+      showToast('✅ Добро пожаловать, ' + user + '!');
+    } else {
+      document.getElementById('loginErrorMsg').textContent = 'Неверный логин или пароль';
+      err.style.display = 'flex';
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginPass').focus();
+    }
+  }, 600);
+}
+function doLogout() {
+  document.getElementById('adminSite').classList.remove('active');
+  document.getElementById('clientSite').style.display = 'block';
+  showToast('👋 Вы вышли из панели администратора');
+}
+</script>
+</body>
+</html>
